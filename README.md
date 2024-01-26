@@ -1,12 +1,16 @@
-<h1 align="center">Sainwha</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/Sain-Wha-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:350px;height:90px;">
+  <h1 align="center"></h1>
+</p>
 
-<h4> How it works is simple, the program sends deauthentication
- packets to the network. Connected clients are deauthenticated and 
- cannot be reconnected unless the attack is stopped.</h4>
+How it works is simple, the program sends deauthentication
+packets to the network. Connected clients are deauthenticated and 
+cannot be reconnected unless the attack is stopped.
 
 <p align="center">
   <img src="docs/Sainwha-1.png" alt="Sainwha">
 </p>
+Its interface is user-friendly and simple to understand.
 
 <h2>Installation</h2>
 
@@ -17,32 +21,38 @@ git clone https://github.com/yzee4/Sainwha.git
 ```
 
 <h1 align="center">Attack example</h1>
-<h4 align="center">This attack was carried out in a controlled environment.</h4>
+
+This is an ```example``` of a deauthentication attack on a network.
+> Made in a controlled environment.
+
 <p align="center" style="text-align: center;">
   <img src="docs/Sainwha-2.png" alt="Sainwha">
 </p>
-<h4 align="center">First we define the scanning interface, then we check and configure the network to attack. The attack is launched and clients are disconnected until the attack is stopped.</h4>
+
+First we define the scanning interface, then we check and configure the network to attack. The attack is launched and clients are disconnected until the attack is stopped.
 
 <h2>Running</h2>
 
 > Open Linux terminal
 
-<h4>1. Go to Sainwha folder</h4>
-
+1. Go to Sainwha folder
 ```terminal
 cd Sainwha
 ```
-<h4>2. Run with python</h4>
-
+2. Run with Python3
 ```terminal
 python3 sainwha.py
 ```
 
-<h1 align="center">Help menu</h1>
-<p align="center" style="text-align: center;">
-  <img src="docs/Sainwha-3.png" alt="Sainwha" style="border: 1px solid #000000; margin-bottom: 10px;">
+<h1 align="center">Instructions</h1>
+
+As it is an easy-to-use program, the options are simple and easy to understand. The variables that need to be set are just ```Interface``` with ```set interface``` or just ```int```, and ```Network``` with ```set network``` or just ```net```.
+
+<p align="center">
+  <img src="docs/Sainwha-3.png" alt="Sainwha">
 </p>
-<h4 align="center">The help menu can be opened within the program with 'help'</h4>
+
+This menu can be opened within the program with ```help```.
 
 <h2>Requirements</h2>
 
@@ -52,10 +62,8 @@ python3 sainwha.py
    - `Nmap` For scans all networks and sends deauthentication packets. To  install use `sudo apt install nmap`
    - `Net-tools` For set interface to scans. To install use `sudo apt install net-tools`
 
-<h2>License</h2>
-
-   - Copyright (c) 2023 yzee4 
-   - License is `MIT`
-
-<h2>Thanks for use :)</h2>
-<h4 align="center">[ visit my other projects ]</h4>
+<h1 align="center">Thanks for using!</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/Author-Yzee4-green?colorA=%23000000&colorB=%23006400&style=flat_square">
+  <img src="https://img.shields.io/badge/License-MIT-green?colorA=%23000000&colorB=%23006400&style=flat_square">
+</p>
