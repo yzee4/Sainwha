@@ -10,7 +10,8 @@ cannot be reconnected unless the attack is stopped.
 <p align="center">
   <img src="docs/Sainwha-1.png" alt="Sainwha">
 </p>
-Its interface is user-friendly and simple to understand.
+
+> Its interface is user-friendly and simple to understand.
 
 
 <p>
