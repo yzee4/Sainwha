@@ -27,12 +27,12 @@ git clone https://github.com/yzee4/Sainwha.git
 
 > Open Linux terminal
 
-<h4>2. Go to Sainwha folder</h4>
+<h4>1. Go to Sainwha folder</h4>
 
 ```terminal
 cd Sainwha
 ```
-<h4>3. Run with python</h4>
+<h4>2. Run with python</h4>
 
 ```terminal
 python3 sainwha.py
