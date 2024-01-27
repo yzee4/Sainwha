@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sain-Wha-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:600px;height:150px;">
+  <img src="https://img.shields.io/badge/Sain-Wha-green?colorA=%23000000&colorB=grey&style=flat_square" style="width:600px;height:150px;">
 </p>
 
 How it works is simple, the tool sends deauthentication
@@ -77,6 +77,6 @@ This menu can be opened within the tool with ```help```.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Author-yzee4-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:130px;height:30px;">
-  <img src="https://img.shields.io/badge/License-MIT-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:130px;height:30px;">
+  <img src="https://img.shields.io/badge/Author-yzee4-green?colorA=%23000000&colorB=grey&style=flat_square" style="width:130px;height:30px;">
+  <img src="https://img.shields.io/badge/License-MIT-green?colorA=%23000000&colorB=grey&style=flat_square" style="width:130px;height:30px;">
 </p>
