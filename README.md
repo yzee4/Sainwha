@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sain-Wha-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:350px;height:90px;">
-  <h1 align="center"></h1>
+  <img src="https://img.shields.io/badge/Sain-Wha-green?colorA=%23000000&colorB=%23006400&style=flat_square" style="width:600px;height:130px;">
 </p>
 
 How it works is simple, the program sends deauthentication
@@ -13,21 +12,15 @@ cannot be reconnected unless the attack is stopped.
 
 > Its interface is user-friendly and simple to understand.
 
-
-<p>
-  <h1></h1>
-  <img src="https://img.shields.io/badge/Installation-%23006400?style=flat_square" style="width:250px;height:60px;">
-</p>
-
+# Installation
+Currently Sainwha ```only supports Linux```, and will probably continue to do so. Sainwha ```supports any Linux distribution```. Installation depends only on the terminal.
 > Open Linux terminal
 ```terminal
 git clone https://github.com/yzee4/Sainwha.git
 ```
 
-<h1></h1>
-
 <p align="center">
-  <img src="https://img.shields.io/badge/Attack_Example-black?style=flat_square" style="width:320px;height:60px;">
+  <img src="https://img.shields.io/badge/Attack_Example-black?style=flat_square" style="width:300px;height:60px;">
 </p>
 
 > This is an example of a deauthentication attack on a network
@@ -38,11 +31,8 @@ git clone https://github.com/yzee4/Sainwha.git
 
 First we define the scanning interface, then we check and configure the network to attack. The attack is launched and clients are disconnected until the attack is stopped.
 
-<h1></h1>
 
-<p>
-  <img src="https://img.shields.io/badge/Running-%23006400?style=flat_square" style="width:220px;height:60px;">
-</p>
+# Running
 
 > Open Linux terminal
 
@@ -55,10 +45,8 @@ cd Sainwha
 python3 sainwha.py
 ```
 
-<h1></h1>
-
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/Inctructions-black?style=flat_square" style="width:270px;height:60px;">
+  <img src="https://img.shields.io/badge/Instructions-black?style=flat_square" style="width:225px;height:60px;">
 </p>
 
 As it is an easy-to-use program, the options are simple and easy to understand. The variables that need to be set are just ```Interface``` with ```set interface``` or just ```int```, and ```Network``` with ```set network``` or just ```net```.
@@ -69,11 +57,7 @@ As it is an easy-to-use program, the options are simple and easy to understand. 
 
 This menu can be opened within the program with ```help```.
 
-<h1></h1>
-
-<p>
-  <img src="https://img.shields.io/badge/Requirements-%23006400?style=flat_square" style="width:300px;height:60px;">
-</p>
+# Requirements
 
 > All requirements can be installed directly on the terminal
 
@@ -85,7 +69,7 @@ This menu can be opened within the program with ```help```.
 
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Thanks for using-black?style=flat_square" style="width:370px;height:60px;">
+  <img src="https://img.shields.io/badge/Thanks for using-black?style=flat_square" style="width:300px;height:60px;">
 </p>
 
 <p align="center">
