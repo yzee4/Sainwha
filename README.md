@@ -15,7 +15,7 @@ cannot be reconnected unless the attack is stopped.
 # Installation
 
 Currently Sainwha ```only supports Linux```, and will probably continue to do so. Sainwha ```supports any Linux distribution```. Installation depends only on the terminal.
-> Open Linux terminal
+> Open Linux terminal.
 ```terminal
 git clone https://github.com/yzee4/Sainwha.git
 ```
@@ -26,7 +26,7 @@ git clone https://github.com/yzee4/Sainwha.git
   <img src="https://img.shields.io/badge/Attack_Example-black?style=flat_square" style="width:300px;height:60px;">
 </p>
 
-> This is an example of a deauthentication attack on a network
+> This is an example of a deauthentication attack on a network.
 
 <p align="center" style="text-align: center;">
   <img src="docs/Sainwha-2.png" alt="Sainwha">
@@ -35,14 +35,14 @@ git clone https://github.com/yzee4/Sainwha.git
 First we define the scanning interface, then we check and configure the network to attack. The attack is launched and clients are disconnected until the attack is stopped.
 
 # Running
-After installation, just run the program
-> Open Linux terminal
+After installation, just run the program.
+> Open Linux terminal.
 
-1. Go to Sainwha folder
+1. Go to Sainwha folder.
 ```terminal
 cd Sainwha
 ```
-2. Run with Python3
+2. Run with Python3.
 ```terminal
 python3 sainwha.py
 ```
@@ -63,12 +63,12 @@ This menu can be opened within the tool with ```help```.
 
 # Requirements
 
-> All requirements can be installed directly on the terminal
+> All requirements can be installed directly on the terminal.
 
-   - `Python3` For running tool. To install use `sudo apt install python3`
-   - `Git` For install tool. To install use `sudo apt install git`
-   - `Aircrack-ng` For scans all networks and sends deauthentication packets. To  install use `sudo apt install aircrack-ng`
-   - `Net-tools` For set interface to scans. To install use `sudo apt install net-tools`
+   - `Python3` For running tool. To install use `sudo apt install python3`.
+   - `Git` For install tool. To install use `sudo apt install git`.
+   - `Aircrack-ng` For scans all networks and sends deauthentication packets. To  install use `sudo apt install aircrack-ng`.
+   - `Net-tools` For set interface to scans. To install use `sudo apt install net-tools`.
 
 <h1></h1>
 
