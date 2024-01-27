@@ -78,7 +78,7 @@ This menu can be opened within the program with ```help```.
 > All requirements can be installed directly on the terminal
 
    - `Python3` For running program. To install use `sudo apt install python3`
-   - `Nmap` For scans all networks and sends deauthentication packets. To  install use `sudo apt install nmap`
+   - `Aircrack-ng` For scans all networks and sends deauthentication packets. To  install use `sudo apt install aircrack-ng`
    - `Net-tools` For set interface to scans. To install use `sudo apt install net-tools`
 
 <h1></h1>
