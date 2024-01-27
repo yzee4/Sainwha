@@ -3,7 +3,7 @@
 </p>
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 How it works is simple, the tool sends deauthentication
@@ -17,10 +17,11 @@ cannot be reconnected unless the attack is stopped.
 > Its interface is user-friendly and simple to understand.
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 # Installation
+
 Currently Sainwha ```only supports Linux```, and will probably continue to do so. Sainwha ```supports any Linux distribution```. Installation depends only on the terminal.
 > Open Linux terminal
 ```terminal
@@ -30,7 +31,7 @@ git clone https://github.com/yzee4/Sainwha.git
 <h4></h4>
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 <p align="center">
@@ -46,7 +47,7 @@ git clone https://github.com/yzee4/Sainwha.git
 First we define the scanning interface, then we check and configure the network to attack. The attack is launched and clients are disconnected until the attack is stopped.
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 # Running
@@ -63,7 +64,7 @@ python3 sainwha.py
 ```
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 <h4></h4>
@@ -81,7 +82,7 @@ As it is an easy-to-use tool, the options are simple and easy to understand. The
 This menu can be opened within the tool with ```help```.
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 # Requirements
@@ -96,7 +97,7 @@ This menu can be opened within the tool with ```help```.
 <h1></h1>
 
 <p align="center" style="text-align: center;">
-  <img src="https://img.shields.io/badge/ -silver?style=flat_square" style="width:1000px;height:10px;">
+  <img src="https://img.shields.io/badge/ -gray?style=flat_square" style="width:1000px;height:5px;">
 </p>
 
 <p align="center">
